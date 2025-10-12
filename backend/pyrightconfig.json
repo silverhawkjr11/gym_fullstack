@@ -1,0 +1,17 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "typeCheckingMode": "standard",
+  "reportMissingTypeStubs": false,
+  "executionEnvironments": [
+    {
+      "root": "./",
+      "extraPaths": [
+        "./",
+        "./backend",
+        "./app",
+        "./src"
+      ]
+    }
+  ]
+}
