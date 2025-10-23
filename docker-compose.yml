@@ -1,0 +1,23 @@
+# Docker Compose for Gym Fullstack MySQL Database
+# This runs MySQL in an isolated container on port 3307 to avoid conflicts with work MySQL
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: gym_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: gymdb
+      MYSQL_USER: gym
+      MYSQL_PASSWORD: gym_pass
+    ports:
+      - "3307:3306"  # Maps container port 3306 to host port 3307
+    volumes:
+      - gym_mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+volumes:
+  gym_mysql_data:
+    name: gym_mysql_data
