@@ -56,28 +56,20 @@
           type="password" 
           id="password" 
           formControlName="password" 
-          placeholder="At least 6 characters"
+          placeholder="At least 8 characters"
           [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
         />
       </div>
 
       <div class="form-group">
-        <label for="phone_number">Phone Number (Optional)</label>
+        <label for="password_confirm">Confirm Password</label>
         <input 
-          type="tel" 
-          id="phone_number" 
-          formControlName="phone_number" 
-          placeholder="Your phone number"
+          type="password" 
+          id="password_confirm" 
+          formControlName="password_confirm" 
+          placeholder="Re-enter your password"
+          [class.error]="registerForm.get('password_confirm')?.invalid && registerForm.get('password_confirm')?.touched"
         />
-      </div>
-
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select id="role" formControlName="role">
-          <option value="member">Member</option>
-          <option value="trainer">Trainer</option>
-          <option value="admin">Admin</option>
-        </select>
       </div>
 
       <div *ngIf="errorMessage" class="alert alert-error">
