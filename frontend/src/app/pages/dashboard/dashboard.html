@@ -1,0 +1,93 @@
+<div class="dashboard">
+  <h1>Dashboard</h1>
+  
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon members">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2>{{ totalMembers }}</h2>
+          <p>Total Members</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon trainers">
+          <mat-icon>fitness_center</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2>{{ totalTrainers }}</h2>
+          <p>Total Trainers</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon classes">
+          <mat-icon>event</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2>{{ totalClasses }}</h2>
+          <p>Active Classes</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon attendance">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2>{{ todayAttendance }}</h2>
+          <p>Today's Attendance</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="content-grid">
+    <mat-card class="recent-card">
+      <mat-card-header>
+        <mat-card-title>Recent Members</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          @for (member of recentMembers; track member.id) {
+            <mat-list-item>
+              <mat-icon matListItemIcon>person</mat-icon>
+              <div matListItemTitle>{{ member.name }}</div>
+              <div matListItemLine>Joined: {{ member.joinDate | date }}</div>
+            </mat-list-item>
+          } @empty {
+            <p class="empty-state">No recent members</p>
+          }
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="recent-card">
+      <mat-card-header>
+        <mat-card-title>Upcoming Classes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          @for (class of upcomingClasses; track class.id) {
+            <mat-list-item>
+              <mat-icon matListItemIcon>event</mat-icon>
+              <div matListItemTitle>{{ class.name }}</div>
+              <div matListItemLine>{{ class.time }} - {{ class.trainer }}</div>
+            </mat-list-item>
+          } @empty {
+            <p class="empty-state">No upcoming classes</p>
+          }
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

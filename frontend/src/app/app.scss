@@ -1,0 +1,75 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 250px;
+  background-color: #181825;
+  padding: 0;
+}
+
+.sidenav-header {
+  padding: 24px 16px;
+  border-bottom: 1px solid #313244;
+  
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #cdd6f4;
+  }
+}
+
+mat-nav-list {
+  padding-top: 8px;
+  
+  a.mat-mdc-list-item {
+    color: #bac2de;
+    margin: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #313244;
+      color: #cdd6f4;
+    }
+    
+    &.active {
+      background-color: #89b4fa;
+      color: #1e1e2e;
+      
+      mat-icon {
+        color: #1e1e2e;
+      }
+    }
+    
+    mat-icon {
+      margin-right: 16px;
+      color: #bac2de;
+    }
+    
+    .nav-label {
+      font-weight: 500;
+    }
+  }
+}
+
+.toolbar {
+  background-color: #1e1e2e !important;
+  border-bottom: 1px solid #313244;
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  button {
+    color: #cdd6f4;
+  }
+}
+
+.content {
+  padding: 24px;
+  background-color: #1e1e2e;
+  min-height: calc(100vh - 64px);
+  overflow-y: auto;
+}

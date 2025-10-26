@@ -90,7 +90,7 @@ DATABASES = {
         "USER": "gym",
         "PASSWORD": "gym_pass",
         "HOST": "127.0.0.1",
-        "PORT": "3307",  # Changed from 3306 to avoid conflict with work MySQL
+        "PORT": "3306",  # Using local MariaDB on port 3306
         "OPTIONS": {"charset": "utf8mb4"},
     }
 }

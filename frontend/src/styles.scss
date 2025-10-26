@@ -1,0 +1,104 @@
+@use '@angular/material' as mat;
+@use 'sass:map';
+
+@include mat.core();
+
+// Catppuccin Mocha Color Palette
+$catppuccin-mocha: (
+  rosewater: #f5e0dc,
+  flamingo: #f2cdcd,
+  pink: #f5c2e7,
+  mauve: #cba6f7,
+  red: #f38ba8,
+  maroon: #eba0ac,
+  peach: #fab387,
+  yellow: #f9e2af,
+  green: #a6e3a1,
+  teal: #94e2d5,
+  sky: #89dceb,
+  sapphire: #74c7ec,
+  blue: #89b4fa,
+  lavender: #b4befe,
+  text: #cdd6f4,
+  subtext1: #bac2de,
+  subtext0: #a6adc8,
+  overlay2: #9399b2,
+  overlay1: #7f849c,
+  overlay0: #6c7086,
+  surface2: #585b70,
+  surface1: #45475a,
+  surface0: #313244,
+  base: #1e1e2e,
+  mantle: #181825,
+  crust: #11111b,
+);
+
+// Define the dark theme using Material 3 API
+$gym-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$blue-palette,
+    tertiary: mat.$violet-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, sans-serif',
+    plain-family: 'Roboto, sans-serif',
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+@include mat.all-component-themes($gym-theme);
+
+/* Global Styles with Catppuccin Mocha */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: map.get($catppuccin-mocha, base);
+  color: map.get($catppuccin-mocha, text);
+}
+
+/* Custom scrollbar with Catppuccin Mocha colors */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: map.get($catppuccin-mocha, mantle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: map.get($catppuccin-mocha, surface2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: map.get($catppuccin-mocha, overlay0);
+}
+
+/* Material overrides for better Catppuccin integration */
+.mat-mdc-card {
+  background-color: map.get($catppuccin-mocha, surface0) !important;
+  color: map.get($catppuccin-mocha, text) !important;
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #{map.get($catppuccin-mocha, surface0)};
+}
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #{map.get($catppuccin-mocha, surface1)};
+  --mat-snack-bar-button-color: #{map.get($catppuccin-mocha, blue)};
+}
