@@ -171,6 +171,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # CORS settings
 # https://github.com/adamchainz/django-cors-headers
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",  # Angular default
+    "http://127.0.0.1:4200",
     "http://localhost:3000",  # React default
     "http://127.0.0.1:3000",
     "http://localhost:5173",  # Vite default
@@ -181,6 +183,19 @@ CORS_ALLOWED_ORIGINS = [
 
 # Allow credentials (cookies, authorization headers)
 CORS_ALLOW_CREDENTIALS = True
+
+# Allow these headers
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # For development, you can allow all origins (NOT for production!)
 # CORS_ALLOW_ALL_ORIGINS = True
