@@ -1,5 +1,11 @@
 <div class="dashboard">
-  <h1>Dashboard</h1>
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <div class="user-info">
+      <span>Welcome, {{ currentUser?.first_name || currentUser?.username }}!</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </div>
   
   <div class="stats-grid">
     <mat-card class="stat-card">
@@ -33,7 +39,7 @@
         </div>
         <div class="stat-info">
           <h2>{{ totalClasses }}</h2>
-          <p>Active Classes</p>
+          <p>Active Sessions</p>
         </div>
       </mat-card-content>
     </mat-card>
@@ -45,7 +51,7 @@
         </div>
         <div class="stat-info">
           <h2>{{ todayAttendance }}</h2>
-          <p>Today's Attendance</p>
+          <p>Completed Today</p>
         </div>
       </mat-card-content>
     </mat-card>
@@ -61,11 +67,11 @@
           @for (member of recentMembers; track member.id) {
             <mat-list-item>
               <mat-icon matListItemIcon>person</mat-icon>
-              <div matListItemTitle>{{ member.name }}</div>
-              <div matListItemLine>Joined: {{ member.joinDate | date }}</div>
+              <div matListItemTitle>{{ member.first_name }} {{ member.last_name }}</div>
+              <div matListItemLine>{{ member.membership_type | uppercase }} - {{ member.email }}</div>
             </mat-list-item>
           } @empty {
-            <p class="empty-state">No recent members</p>
+            <p class="empty-state">No members found</p>
           }
         </mat-list>
       </mat-card-content>
@@ -73,18 +79,18 @@
 
     <mat-card class="recent-card">
       <mat-card-header>
-        <mat-card-title>Upcoming Classes</mat-card-title>
+        <mat-card-title>Upcoming Sessions</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-list>
-          @for (class of upcomingClasses; track class.id) {
+          @for (session of upcomingSessions; track session.id) {
             <mat-list-item>
               <mat-icon matListItemIcon>event</mat-icon>
-              <div matListItemTitle>{{ class.name }}</div>
-              <div matListItemLine>{{ class.time }} - {{ class.trainer }}</div>
+              <div matListItemTitle>{{ session.session_type | uppercase }} - {{ session.duration_minutes }}min</div>
+              <div matListItemLine>{{ session.scheduled_date | date:'short' }} - ${{ session.price }}</div>
             </mat-list-item>
           } @empty {
-            <p class="empty-state">No upcoming classes</p>
+            <p class="empty-state">No upcoming sessions</p>
           }
         </mat-list>
       </mat-card-content>

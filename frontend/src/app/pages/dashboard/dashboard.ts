@@ -3,6 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { MemberService } from '../../services/member.service';
+import { TrainerService } from '../../services/trainer.service';
+import { SessionService } from '../../services/session.service';
+import { Member } from '../../models/member.model';
+import { Trainer } from '../../models/trainer.model';
+import { TrainingSession } from '../../models/session.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,26 +29,61 @@ export class Dashboard implements OnInit {
   totalClasses = 0;
   todayAttendance = 0;
 
-  recentMembers: any[] = [];
-  upcomingClasses: any[] = [];
+  recentMembers: Member[] = [];
+  upcomingSessions: TrainingSession[] = [];
+  currentUser: any;
+
+  constructor(
+    private authService: AuthService,
+    private memberService: MemberService,
+    private trainerService: TrainerService,
+    private sessionService: SessionService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    // Mock data - will be replaced with API calls
-    this.totalMembers = 142;
-    this.totalTrainers = 12;
-    this.totalClasses = 8;
-    this.todayAttendance = 87;
+    this.currentUser = this.authService.getCurrentUser();
+    if (!this.currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
-    this.recentMembers = [
-      { id: 1, name: 'John Doe', joinDate: new Date('2025-01-15') },
-      { id: 2, name: 'Jane Smith', joinDate: new Date('2025-01-14') },
-      { id: 3, name: 'Mike Johnson', joinDate: new Date('2025-01-13') }
-    ];
+    this.loadDashboardData();
+  }
 
-    this.upcomingClasses = [
-      { id: 1, name: 'Yoga Flow', time: '10:00 AM', trainer: 'Sarah Wilson' },
-      { id: 2, name: 'CrossFit', time: '11:30 AM', trainer: 'Mike Brown' },
-      { id: 3, name: 'Pilates', time: '2:00 PM', trainer: 'Emma Davis' }
-    ];
+  loadDashboardData() {
+    this.memberService.getMembers().subscribe({
+      next: (members) => {
+        this.totalMembers = members.length;
+        this.recentMembers = members.slice(0, 5);
+      },
+      error: (err) => console.error('Error loading members:', err)
+    });
+
+    this.trainerService.getTrainers().subscribe({
+      next: (trainers) => {
+        this.totalTrainers = trainers.length;
+      },
+      error: (err) => console.error('Error loading trainers:', err)
+    });
+
+    this.sessionService.getSessions().subscribe({
+      next: (sessions) => {
+        this.totalClasses = sessions.length;
+        const today = new Date().toISOString().split('T')[0];
+        this.todayAttendance = sessions.filter(s => 
+          s.scheduled_date.startsWith(today) && s.status === 'completed'
+        ).length;
+        this.upcomingSessions = sessions
+          .filter(s => s.status === 'scheduled')
+          .slice(0, 5);
+      },
+      error: (err) => console.error('Error loading sessions:', err)
+    });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
