@@ -23,3 +23,17 @@ export interface MemberRequest {
   emergency_contact?: string;
   medical_conditions?: string;
 }
+
+export interface MemberCreateRequest {
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  password: string;
+  membership_type: string;
+  membership_start_date: string;
+  membership_end_date: string;
+  emergency_contact?: string;
+  medical_conditions?: string;
+  is_active?: boolean;
+}

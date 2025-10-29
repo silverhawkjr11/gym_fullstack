@@ -22,3 +22,16 @@ export interface TrainerRequest {
   hourly_rate: string;
   is_available?: boolean;
 }
+
+export interface TrainerCreateRequest {
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  password: string;
+  specialization: string;
+  experience_years: number;
+  bio?: string;
+  hourly_rate: number;
+  is_available?: boolean;
+}

@@ -9,6 +9,8 @@ from .serializers import (
     UserLoginSerializer,
     MemberProfileSerializer,
     TrainerProfileSerializer,
+    MemberCreateSerializer,
+    TrainerCreateSerializer,
 )
 from .models import MemberProfile, TrainerProfile
 
@@ -76,8 +78,18 @@ class TrainerViewSet(viewsets.ModelViewSet):
     serializer_class = TrainerProfileSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return TrainerCreateSerializer
+        return TrainerProfileSerializer
+
 
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = MemberProfile.objects.select_related("user").all()
     serializer_class = MemberProfileSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return MemberCreateSerializer
+        return MemberProfileSerializer

@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: Dashboard },
   { path: 'members', loadComponent: () => import('./pages/members/members').then(m => m.MembersComponent) },
   { path: 'trainers', loadComponent: () => import('./pages/trainers/trainers').then(m => m.TrainersComponent) },
+  { path: 'sessions', loadComponent: () => import('./pages/sessions/sessions').then(m => m.SessionsComponent) },
   { path: 'plans', loadComponent: () => import('./pages/plans/plans').then(m => m.PlansComponent) },
   { path: 'machines', loadComponent: () => import('./pages/machines/machines').then(m => m.MachinesComponent) }
 ];

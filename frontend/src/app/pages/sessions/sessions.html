@@ -1,0 +1,94 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Training Sessions</h1>
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      <mat-icon>add</mat-icon>
+      Register Session
+    </button>
+  </div>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="sessions" class="themed-table">
+        <ng-container matColumnDef="trainer">
+          <th mat-header-cell *matHeaderCellDef>Trainer</th>
+          <td mat-data-cell *matCellDef="let session">
+            <div class="user-info">
+              <mat-icon>fitness_center</mat-icon>
+              <span>{{session.trainer_name || 'Unknown'}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="member">
+          <th mat-header-cell *matHeaderCellDef>Member</th>
+          <td mat-data-cell *matCellDef="let session">
+            <div class="user-info">
+              <mat-icon>person</mat-icon>
+              <span>{{session.member_name || 'Unknown'}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-data-cell *matCellDef="let session">
+            <span [class]="'type-badge ' + getTypeClass(session.session_type)">
+              {{session.session_type | titlecase}}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Scheduled</th>
+          <td mat-data-cell *matCellDef="let session">{{formatDate(session.scheduled_date)}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="duration">
+          <th mat-header-cell *matHeaderCellDef>Duration</th>
+          <td mat-data-cell *matCellDef="let session">
+            <span class="duration-badge">{{session.duration_minutes}} min</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-data-cell *matCellDef="let session">
+            <span [class]="'status-badge ' + getStatusClass(session.status)">
+              {{session.status | titlecase}}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Price</th>
+          <td mat-data-cell *matCellDef="let session">
+            <span class="price-badge">${{session.price}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-data-cell *matCellDef="let session">
+            <button mat-icon-button class="edit-btn" (click)="openDialog(session)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="delete-btn" (click)="deleteSession(session.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (sessions.length === 0) {
+        <div class="empty-state">
+          <mat-icon>event_busy</mat-icon>
+          <p>No training sessions found</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

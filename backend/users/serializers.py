@@ -161,3 +161,96 @@ class MemberProfileSerializer(serializers.ModelSerializer):
                 {"membership_end_date": "End date must be after start date."}
             )
         return attrs
+
+
+class MemberCreateSerializer(serializers.Serializer):
+    """Create a User and MemberProfile in one transaction"""
+    # User fields
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    last_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True, min_length=4)
+
+    # Member profile fields
+    membership_type = serializers.ChoiceField(choices=MemberProfile.MEMBERSHIP_CHOICES, default=MemberProfile.BASIC)
+    membership_start_date = serializers.DateField()
+    membership_end_date = serializers.DateField()
+    emergency_contact = serializers.CharField(max_length=140, required=False, allow_blank=True)
+    medical_conditions = serializers.CharField(required=False, allow_blank=True)
+    is_active = serializers.BooleanField(default=True)
+
+    def validate(self, attrs):
+        if attrs['membership_end_date'] < attrs['membership_start_date']:
+            raise serializers.ValidationError(
+                {"membership_end_date": "End date must be after start date."}
+            )
+        return attrs
+
+    def create(self, validated_data):
+        # Extract profile fields
+        profile_fields = {
+            'membership_type': validated_data.pop('membership_type', MemberProfile.BASIC),
+            'membership_start_date': validated_data.pop('membership_start_date'),
+            'membership_end_date': validated_data.pop('membership_end_date'),
+            'emergency_contact': validated_data.pop('emergency_contact', ''),
+            'medical_conditions': validated_data.pop('medical_conditions', ''),
+            'is_active': validated_data.pop('is_active', True),
+        }
+
+        # Create user with TRAINEE role
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            password=validated_data['password'],
+            role=User.Role.TRAINEE,
+        )
+
+        # Create member profile
+        member_profile = MemberProfile.objects.create(user=user, **profile_fields)
+
+        return member_profile
+
+
+class TrainerCreateSerializer(serializers.Serializer):
+    """Create a User and TrainerProfile in one transaction"""
+    # User fields
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    last_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True, min_length=4)
+
+    # Trainer profile fields
+    specialization = serializers.CharField(max_length=120)
+    experience_years = serializers.IntegerField(default=0)
+    bio = serializers.CharField(required=False, allow_blank=True)
+    hourly_rate = serializers.DecimalField(max_digits=8, decimal_places=2, default=0)
+    is_available = serializers.BooleanField(default=True)
+
+    def create(self, validated_data):
+        # Extract profile fields
+        profile_fields = {
+            'specialization': validated_data.pop('specialization'),
+            'experience_years': validated_data.pop('experience_years', 0),
+            'bio': validated_data.pop('bio', ''),
+            'hourly_rate': validated_data.pop('hourly_rate', 0),
+            'is_available': validated_data.pop('is_available', True),
+        }
+
+        # Create user with TRAINER role
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            password=validated_data['password'],
+            role=User.Role.TRAINER,
+        )
+
+        # Create trainer profile
+        trainer_profile = TrainerProfile.objects.create(user=user, **profile_fields)
+
+        return trainer_profile
