@@ -2,7 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics, permissions, status
-from .serializers import TraineeCreateSerializer, UserRegistrationSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import (
+    TraineeCreateSerializer,
+    UserRegistrationSerializer,
+    UserLoginSerializer,
+)
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -56,3 +61,8 @@ class IsTrainer(permissions.BasePermission):
 class CreateTraineeView(generics.CreateAPIView):
     serializer_class = TraineeCreateSerializer
     permission_classes = [IsTrainer]
+
+
+class UserLoginView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = UserLoginSerializer

@@ -1,6 +1,7 @@
 # users/serializers.py
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
 
@@ -47,3 +48,33 @@ class TraineeCreateSerializer(serializers.ModelSerializer):
             role="TRAINEE",
             trainer=trainer,
         )
+
+
+class UserLoginSerializer(TokenObtainPairSerializer):
+    """Extend JWT login to include user details in the response payload."""
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["username"] = user.username
+        token["email"] = user.email
+        token["role"] = getattr(user, "role", None)
+        token["trainer_id"] = getattr(user, "trainer_id", None)
+        token["first_name"] = user.first_name
+        token["last_name"] = user.last_name
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+        data["user"] = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": getattr(user, "role", None),
+            "trainer_id": getattr(user, "trainer_id", None),
+            "is_active": user.is_active,
+        }
+        return data
