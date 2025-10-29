@@ -1,7 +1,12 @@
 # training/views.py
 from rest_framework import viewsets, permissions, filters
-from .models import Student, Lesson, Payment
-from .serializers import StudentSerializer, LessonSerializer, PaymentSerializer
+from .models import Student, Lesson, Payment, TrainingSession
+from .serializers import (
+    StudentSerializer,
+    LessonSerializer,
+    PaymentSerializer,
+    TrainingSessionSerializer,
+)
 
 
 class IsAdminOrTrainerReadOwn(permissions.BasePermission):
@@ -28,6 +33,11 @@ class IsAdminOrTrainerReadOwn(permissions.BasePermission):
                 return obj.student.user.trainer_id == u.id
             if u.role == "TRAINEE":
                 return obj.student.user_id == u.id
+        if isinstance(obj, TrainingSession):
+            if u.role == "TRAINER":
+                return obj.trainer.user_id == u.id
+            if u.role == "TRAINEE":
+                return obj.member.user_id == u.id
         return False
 
 
@@ -81,3 +91,25 @@ class PaymentViewSet(BaseViewSet):
         if u.role == "TRAINER":
             return super().get_queryset().filter(student__user__trainer_id=u.id)
         return super().get_queryset().filter(student__user_id=u.id)
+
+
+class TrainingSessionViewSet(BaseViewSet):
+    queryset = TrainingSession.objects.select_related(
+        "trainer__user", "member__user"
+    )
+    serializer_class = TrainingSessionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    search_fields = ["session_type", "status", "notes"]
+    ordering_fields = ["scheduled_date", "duration_minutes", "price"]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        u = self.request.user
+        role = getattr(u, "role", None)
+        if role == "ADMIN":
+            return qs
+        if role == "TRAINER":
+            return qs.filter(trainer__user_id=u.id)
+        if role == "TRAINEE":
+            return qs.filter(member__user_id=u.id)
+        return qs.none()

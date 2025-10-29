@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from .models import MemberProfile, TrainerProfile
+
 User = get_user_model()
 
 
@@ -78,3 +80,84 @@ class UserLoginSerializer(TokenObtainPairSerializer):
             "is_active": user.is_active,
         }
         return data
+
+
+class UserSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "is_active",
+        )
+
+
+class TrainerProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(role=User.Role.TRAINER)
+    )
+    username = serializers.CharField(source="user.username", read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+
+    class Meta:
+        model = TrainerProfile
+        fields = (
+            "id",
+            "user",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "specialization",
+            "experience_years",
+            "bio",
+            "hourly_rate",
+            "is_available",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("created_at", "updated_at")
+
+
+class MemberProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(role=User.Role.TRAINEE)
+    )
+    username = serializers.CharField(source="user.username", read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+
+    class Meta:
+        model = MemberProfile
+        fields = (
+            "id",
+            "user",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "membership_type",
+            "membership_start_date",
+            "membership_end_date",
+            "is_active",
+            "emergency_contact",
+            "medical_conditions",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("created_at", "updated_at")
+
+    def validate(self, attrs):
+        start = attrs.get("membership_start_date")
+        end = attrs.get("membership_end_date")
+        if start and end and end < start:
+            raise serializers.ValidationError(
+                {"membership_end_date": "End date must be after start date."}
+            )
+        return attrs

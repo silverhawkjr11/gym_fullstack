@@ -1,13 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (
     TraineeCreateSerializer,
     UserRegistrationSerializer,
     UserLoginSerializer,
+    MemberProfileSerializer,
+    TrainerProfileSerializer,
 )
+from .models import MemberProfile, TrainerProfile
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -66,3 +69,15 @@ class CreateTraineeView(generics.CreateAPIView):
 class UserLoginView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
+
+
+class TrainerViewSet(viewsets.ModelViewSet):
+    queryset = TrainerProfile.objects.select_related("user").all()
+    serializer_class = TrainerProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = MemberProfile.objects.select_related("user").all()
+    serializer_class = MemberProfileSerializer
+    permission_classes = [IsAuthenticated]
