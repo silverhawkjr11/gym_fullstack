@@ -1,0 +1,54 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gym Machines</h1>
+  </div>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="machines" class="themed-table">
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Code</th>
+          <td mat-data-cell *matCellDef="let machine">
+            <span class="code-badge">{{machine.code}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-data-cell *matCellDef="let machine">
+            <div class="machine-info">
+              <mat-icon>settings</mat-icon>
+              <span>{{machine.name}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-data-cell *matCellDef="let machine">
+            <span class="description">{{machine.description || 'N/A'}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-data-cell *matCellDef="let machine">
+            <button mat-icon-button class="delete-btn" (click)="deleteMachine(machine.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (machines.length === 0) {
+        <div class="empty-state">
+          <mat-icon>fitness_center</mat-icon>
+          <p>No gym machines found</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,47 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gym Trainers</h1>
+  </div>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="trainers" class="themed-table">
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-data-cell *matCellDef="let trainer">{{trainer.username}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="specialization">
+          <th mat-header-cell *matHeaderCellDef>Specialization</th>
+          <td mat-data-cell *matCellDef="let trainer">
+            <span class="badge">{{trainer.specialization}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="experience">
+          <th mat-header-cell *matHeaderCellDef>Experience</th>
+          <td mat-data-cell *matCellDef="let trainer">{{trainer.experience_years}} years</td>
+        </ng-container>
+
+        <ng-container matColumnDef="available">
+          <th mat-header-cell *matHeaderCellDef>Availability</th>
+          <td mat-data-cell *matCellDef="let trainer">
+            <span class="status-badge" [class.active]="trainer.is_available" [class.inactive]="!trainer.is_available">
+              {{trainer.is_available ? 'Available' : 'Unavailable'}}
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (trainers.length === 0) {
+        <div class="empty-state">
+          <mat-icon>fitness_center</mat-icon>
+          <p>No trainers found</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

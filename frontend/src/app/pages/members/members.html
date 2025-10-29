@@ -1,0 +1,47 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gym Members</h1>
+  </div>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="members" class="themed-table">
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-data-cell *matCellDef="let member">{{member.username}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-data-cell *matCellDef="let member">{{member.email}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="membership_type">
+          <th mat-header-cell *matHeaderCellDef>Membership</th>
+          <td mat-data-cell *matCellDef="let member">
+            <span class="badge">{{member.membership_type | uppercase}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="is_active">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-data-cell *matCellDef="let member">
+            <span class="status-badge" [class.active]="member.is_active" [class.inactive]="!member.is_active">
+              {{member.is_active ? 'Active' : 'Inactive'}}
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (members.length === 0) {
+        <div class="empty-state">
+          <mat-icon>people_outline</mat-icon>
+          <p>No members found</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

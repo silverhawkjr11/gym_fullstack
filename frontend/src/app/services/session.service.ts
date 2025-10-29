@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { TrainingSession, SessionRequest } from '../models/session.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ export class SessionService {
   constructor(private http: HttpClient) {}
 
   getSessions(): Observable<TrainingSession[]> {
-    return this.http.get<TrainingSession[]>(`${this.apiUrl}/sessions/`);
+    return this.http.get<PaginatedResponse<TrainingSession>>(`${this.apiUrl}/sessions/`)
+      .pipe(map(response => response.results));
   }
 
   getSession(id: number): Observable<TrainingSession> {

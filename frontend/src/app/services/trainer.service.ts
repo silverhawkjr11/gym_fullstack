@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Trainer, TrainerRequest } from '../models/trainer.model';
+import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ export class TrainerService {
   constructor(private http: HttpClient) {}
 
   getTrainers(): Observable<Trainer[]> {
-    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers/`);
+    return this.http.get<PaginatedResponse<Trainer>>(`${this.apiUrl}/trainers/`)
+      .pipe(map(response => response.results));
   }
 
   getTrainer(id: number): Observable<Trainer> {

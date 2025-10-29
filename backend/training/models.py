@@ -3,6 +3,39 @@ from django.conf import settings
 
 User = settings.AUTH_USER_MODEL
 
+
+class Machine(models.Model):
+    """Gym equipment/machines"""
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class Plan(models.Model):
+    """Workout plans for trainees"""
+    trainee = models.ForeignKey(User, on_delete=models.CASCADE, related_name="workout_plans")
+    description = models.CharField(max_length=100)
+    machines = models.CharField(max_length=255, help_text="Comma-separated machine IDs")
+    days = models.CharField(max_length=100, help_text="e.g., Monday,Wednesday,Friday")
+    sets = models.IntegerField(default=3)
+    reps = models.IntegerField(default=15)
+    duration_minutes = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Plan for {self.trainee.username}: {self.description}"
+
+
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile")
     phone = models.CharField(max_length=30, blank=True)

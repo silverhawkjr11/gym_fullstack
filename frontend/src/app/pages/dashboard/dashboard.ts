@@ -42,8 +42,9 @@ export class Dashboard implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Check both user object AND valid token
     this.currentUser = this.authService.getCurrentUser();
-    if (!this.currentUser) {
+    if (!this.currentUser || !this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
     }

@@ -1,0 +1,59 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Workout Plans</h1>
+  </div>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="plans" class="themed-table">
+        <ng-container matColumnDef="trainee">
+          <th mat-header-cell *matHeaderCellDef>Trainee</th>
+          <td mat-data-cell *matCellDef="let plan">
+            <div class="trainee-info">
+              <mat-icon>person</mat-icon>
+              <span>{{plan.trainee_name}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-data-cell *matCellDef="let plan">{{plan.description}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="days">
+          <th mat-header-cell *matHeaderCellDef>Days</th>
+          <td mat-data-cell *matCellDef="let plan">
+            <span class="badge">{{plan.days}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sets_reps">
+          <th mat-header-cell *matHeaderCellDef>Sets × Reps</th>
+          <td mat-data-cell *matCellDef="let plan">
+            <span class="stats-badge">{{plan.sets}} × {{plan.reps}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-data-cell *matCellDef="let plan">
+            <button mat-icon-button class="delete-btn" (click)="deletePlan(plan.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (plans.length === 0) {
+        <div class="empty-state">
+          <mat-icon>assignment</mat-icon>
+          <p>No workout plans found</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

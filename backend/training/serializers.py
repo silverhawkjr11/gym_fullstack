@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Student, Lesson, Payment, TrainingSession
+from .models import Student, Lesson, Payment, TrainingSession, Machine, Plan
 from users.models import TrainerProfile, MemberProfile
 
 User = get_user_model()
@@ -106,5 +106,44 @@ class TrainingSessionSerializer(serializers.ModelSerializer):
 
     def get_member_name(self, obj):
         user = obj.member.user
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        return full_name if full_name else user.username
+
+
+class MachineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Machine
+        fields = ("id", "code", "name", "description", "created_at")
+        read_only_fields = ("created_at",)
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    trainee = UserMiniSerializer(read_only=True)
+    trainee_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(role="TRAINEE"),
+        write_only=True,
+        source="trainee"
+    )
+    trainee_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Plan
+        fields = (
+            "id",
+            "trainee",
+            "trainee_id",
+            "trainee_name",
+            "description",
+            "machines",
+            "days",
+            "sets",
+            "reps",
+            "duration_minutes",
+            "created_at",
+        )
+        read_only_fields = ("created_at",)
+
+    def get_trainee_name(self, obj):
+        user = obj.trainee
         full_name = f"{user.first_name} {user.last_name}".strip()
         return full_name if full_name else user.username

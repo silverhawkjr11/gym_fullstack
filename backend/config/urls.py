@@ -24,7 +24,7 @@ def api_root(_):
                 "refresh": "/api/auth/token/refresh/"
             },
             "user": "/api/me",
-            "training": "/api/",
+            "training": "/api/training/",
             "users": "/api/users/"
         }
     })
@@ -44,6 +44,6 @@ urlpatterns = [
     path("api/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/me", MeView.as_view(), name="me"),
-    path("api/", include("training.urls")),
+    path("api/training/", include("training.urls")),
     path("api/users/", include("users.urls")),
 ]

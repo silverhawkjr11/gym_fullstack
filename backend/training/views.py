@@ -1,11 +1,13 @@
 # training/views.py
 from rest_framework import viewsets, permissions, filters
-from .models import Student, Lesson, Payment, TrainingSession
+from .models import Student, Lesson, Payment, TrainingSession, Machine, Plan
 from .serializers import (
     StudentSerializer,
     LessonSerializer,
     PaymentSerializer,
     TrainingSessionSerializer,
+    MachineSerializer,
+    PlanSerializer,
 )
 
 
@@ -112,4 +114,42 @@ class TrainingSessionViewSet(BaseViewSet):
             return qs.filter(trainer__user_id=u.id)
         if role == "TRAINEE":
             return qs.filter(member__user_id=u.id)
+        return qs.none()
+
+
+class MachineViewSet(viewsets.ModelViewSet):
+    queryset = Machine.objects.all()
+    serializer_class = MachineSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["code", "name", "description"]
+    ordering_fields = ["name", "code", "created_at"]
+
+
+class PlanViewSet(viewsets.ModelViewSet):
+    queryset = Plan.objects.select_related("trainee")
+    serializer_class = PlanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["description", "trainee__username"]
+    ordering_fields = ["created_at", "trainee__username"]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        u = self.request.user
+        role = getattr(u, "role", None)
+
+        # Filter by trainee_id query param if provided
+        trainee_id = self.request.query_params.get('trainee_id')
+        if trainee_id:
+            qs = qs.filter(trainee_id=trainee_id)
+
+        if role == "ADMIN":
+            return qs
+        if role == "TRAINER":
+            # Trainers can see plans for their trainees
+            return qs.filter(trainee__trainer_id=u.id)
+        if role == "TRAINEE":
+            # Trainees can only see their own plans
+            return qs.filter(trainee_id=u.id)
         return qs.none()
