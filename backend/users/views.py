@@ -12,7 +12,7 @@ from .serializers import (
     MemberCreateSerializer,
     TrainerCreateSerializer,
 )
-from .models import MemberProfile, TrainerProfile
+from .models import MemberProfile, TrainerProfile, User
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -63,6 +63,17 @@ class IsTrainer(permissions.BasePermission):
         )
 
 
+class IsAdminRole(permissions.BasePermission):
+    """Allow access only to admin users."""
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and getattr(request.user, "role", None) == User.Role.ADMIN
+        )
+
+
 class CreateTraineeView(generics.CreateAPIView):
     serializer_class = TraineeCreateSerializer
     permission_classes = [IsTrainer]
@@ -83,6 +94,11 @@ class TrainerViewSet(viewsets.ModelViewSet):
             return TrainerCreateSerializer
         return TrainerProfileSerializer
 
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsAdminRole()]
+        return [permission() for permission in self.permission_classes]
+
 
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = MemberProfile.objects.select_related("user").all()
@@ -93,3 +109,8 @@ class MemberViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return MemberCreateSerializer
         return MemberProfileSerializer
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsAdminRole()]
+        return [permission() for permission in self.permission_classes]

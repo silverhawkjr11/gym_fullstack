@@ -1,6 +1,16 @@
 <div class="page-container">
   <div class="page-header">
     <h1>Gym Members</h1>
+    @if (isAdmin) {
+      <button mat-raised-button color="primary" (click)="openDialog()">
+        <mat-icon>person_add</mat-icon>
+        Add Member
+      </button>
+    } @else {
+      <span class="access-hint">
+        Admin access required to add members
+      </span>
+    }
   </div>
 
   <mat-card class="data-card">

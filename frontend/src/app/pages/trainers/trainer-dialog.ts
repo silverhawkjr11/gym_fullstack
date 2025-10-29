@@ -44,19 +44,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
           }
         </mat-form-field>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input matInput formControlName="first_name">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input matInput formControlName="last_name">
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="first_name">
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="last_name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" required>
           @if (trainerForm.get('password')?.hasError('required') && trainerForm.get('password')?.touched) {
@@ -69,7 +67,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
         <h3 class="section-title">Professional Information</h3>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Specialization</mat-label>
           <input matInput formControlName="specialization" placeholder="e.g., Strength Training, Yoga, Cardio" required>
           @if (trainerForm.get('specialization')?.hasError('required') && trainerForm.get('specialization')?.touched) {
@@ -77,36 +75,34 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
           }
         </mat-form-field>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Experience (years)</mat-label>
-            <input matInput type="number" formControlName="experience_years" required>
-            @if (trainerForm.get('experience_years')?.hasError('required') && trainerForm.get('experience_years')?.touched) {
-              <mat-error>Experience is required</mat-error>
-            }
-            @if (trainerForm.get('experience_years')?.hasError('min')) {
-              <mat-error>Experience must be 0 or more</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Hourly Rate ($)</mat-label>
-            <input matInput type="number" formControlName="hourly_rate" required>
-            @if (trainerForm.get('hourly_rate')?.hasError('required') && trainerForm.get('hourly_rate')?.touched) {
-              <mat-error>Hourly rate is required</mat-error>
-            }
-            @if (trainerForm.get('hourly_rate')?.hasError('min')) {
-              <mat-error>Rate must be 0 or more</mat-error>
-            }
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Experience (years)</mat-label>
+          <input matInput type="number" formControlName="experience_years" required>
+          @if (trainerForm.get('experience_years')?.hasError('required') && trainerForm.get('experience_years')?.touched) {
+            <mat-error>Experience is required</mat-error>
+          }
+          @if (trainerForm.get('experience_years')?.hasError('min')) {
+            <mat-error>Experience must be 0 or more</mat-error>
+          }
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Hourly Rate ($)</mat-label>
+          <input matInput type="number" formControlName="hourly_rate" required>
+          @if (trainerForm.get('hourly_rate')?.hasError('required') && trainerForm.get('hourly_rate')?.touched) {
+            <mat-error>Hourly rate is required</mat-error>
+          }
+          @if (trainerForm.get('hourly_rate')?.hasError('min')) {
+            <mat-error>Rate must be 0 or more</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Bio</mat-label>
           <textarea matInput formControlName="bio" rows="3" placeholder="Brief professional bio"></textarea>
         </mat-form-field>
 
-        <mat-checkbox formControlName="is_available">Available for Training</mat-checkbox>
+        <mat-checkbox formControlName="is_available" class="full-span">Available for Training</mat-checkbox>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -117,35 +113,70 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     </mat-dialog-actions>
   `,
   styles: [`
+    :host {
+      display: block;
+      color: #cdd6f4;
+    }
+
+    h2[mat-dialog-title] {
+      color: #cdd6f4;
+      margin-bottom: 12px;
+    }
+
+    mat-dialog-content {
+      padding: 0 0 12px;
+      max-height: none;
+      overflow: visible;
+    }
+
     .trainer-form {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 16px;
-      min-width: 550px;
-      padding: 20px 0;
+      width: min(720px, 100%);
+      padding: 0 24px 12px;
     }
 
     mat-form-field {
       width: 100%;
     }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
     .section-title {
+      grid-column: 1 / -1;
       color: #cdd6f4;
       font-size: 1rem;
       font-weight: 600;
-      margin: 8px 0 0 0;
+      margin: 16px 0 0;
       padding-bottom: 8px;
       border-bottom: 2px solid #45475a;
     }
 
+    .full-span {
+      grid-column: 1 / -1;
+    }
+
     mat-checkbox {
       margin-top: 8px;
+      grid-column: 1 / -1;
+      justify-self: flex-start;
+    }
+
+    mat-dialog-actions {
+      padding: 16px 24px 0;
+      margin: 0;
+      border-top: 1px solid #45475a;
+    }
+
+    @media (max-width: 720px) {
+      .trainer-form {
+        padding: 0 16px 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .trainer-form {
+        grid-template-columns: 1fr;
+      }
     }
   `]
 })

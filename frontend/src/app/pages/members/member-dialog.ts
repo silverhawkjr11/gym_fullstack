@@ -50,19 +50,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
           }
         </mat-form-field>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input matInput formControlName="first_name">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input matInput formControlName="last_name">
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="first_name">
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="last_name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" required>
           @if (memberForm.get('password')?.hasError('required') && memberForm.get('password')?.touched) {
@@ -75,7 +73,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
         <h3 class="section-title">Membership Details</h3>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Membership Type</mat-label>
           <mat-select formControlName="membership_type" required>
             <mat-option value="basic">Basic</mat-option>
@@ -84,39 +82,37 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
           </mat-select>
         </mat-form-field>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="startPicker" formControlName="membership_start_date" required>
-            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-            @if (memberForm.get('membership_start_date')?.hasError('required') && memberForm.get('membership_start_date')?.touched) {
-              <mat-error>Start date is required</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endPicker" formControlName="membership_end_date" required>
-            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-            @if (memberForm.get('membership_end_date')?.hasError('required') && memberForm.get('membership_end_date')?.touched) {
-              <mat-error>End date is required</mat-error>
-            }
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="membership_start_date" required>
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          @if (memberForm.get('membership_start_date')?.hasError('required') && memberForm.get('membership_start_date')?.touched) {
+            <mat-error>Start date is required</mat-error>
+          }
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="membership_end_date" required>
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          @if (memberForm.get('membership_end_date')?.hasError('required') && memberForm.get('membership_end_date')?.touched) {
+            <mat-error>End date is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Emergency Contact</mat-label>
           <input matInput formControlName="emergency_contact" placeholder="Phone number or name">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Medical Conditions</mat-label>
           <textarea matInput formControlName="medical_conditions" rows="3" placeholder="Any medical conditions or notes"></textarea>
         </mat-form-field>
 
-        <mat-checkbox formControlName="is_active">Active Member</mat-checkbox>
+        <mat-checkbox formControlName="is_active" class="full-span">Active Member</mat-checkbox>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -127,35 +123,70 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     </mat-dialog-actions>
   `,
   styles: [`
+    :host {
+      display: block;
+      color: #cdd6f4;
+    }
+
+    h2[mat-dialog-title] {
+      color: #cdd6f4;
+      margin-bottom: 12px;
+    }
+
+    mat-dialog-content {
+      padding: 0 0 12px;
+      max-height: none;
+      overflow: visible;
+    }
+
     .member-form {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 16px;
-      min-width: 550px;
-      padding: 20px 0;
+      width: min(720px, 100%);
+      padding: 0 24px 12px;
     }
 
     mat-form-field {
       width: 100%;
     }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
     .section-title {
+      grid-column: 1 / -1;
       color: #cdd6f4;
       font-size: 1rem;
       font-weight: 600;
-      margin: 8px 0 0 0;
+      margin: 16px 0 0;
       padding-bottom: 8px;
       border-bottom: 2px solid #45475a;
     }
 
+    .full-span {
+      grid-column: 1 / -1;
+    }
+
     mat-checkbox {
       margin-top: 8px;
+      grid-column: 1 / -1;
+      justify-self: flex-start;
+    }
+
+    mat-dialog-actions {
+      padding: 16px 24px 0;
+      margin: 0;
+      border-top: 1px solid #45475a;
+    }
+
+    @media (max-width: 720px) {
+      .member-form {
+        padding: 0 16px 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .member-form {
+        grid-template-columns: 1fr;
+      }
     }
   `]
 })

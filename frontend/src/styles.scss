@@ -96,6 +96,22 @@ body {
 
 .mat-mdc-dialog-container {
   --mdc-dialog-container-color: #{map.get($catppuccin-mocha, surface0)};
+  --mdc-dialog-headline-ink-color: #{map.get($catppuccin-mocha, text)};
+  --mdc-dialog-supporting-text-ink-color: #{map.get($catppuccin-mocha, subtext0)};
+  --mdc-dialog-container-shape: 18px;
+}
+
+.mat-mdc-dialog-surface {
+  border: 1px solid map.get($catppuccin-mocha, surface1);
+  box-shadow: 0 20px 45px rgba(17, 17, 27, 0.55);
+}
+
+.wide-form-dialog .mat-mdc-dialog-surface {
+  width: min(720px, calc(100vw - 48px));
+}
+
+.mat-mdc-dialog-content {
+  color: map.get($catppuccin-mocha, text);
 }
 
 .mat-mdc-snack-bar-container {
