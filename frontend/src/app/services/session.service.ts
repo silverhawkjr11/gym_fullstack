@@ -7,7 +7,7 @@ import { TrainingSession, SessionRequest } from '../models/session.model';
   providedIn: 'root'
 })
 export class SessionService {
-  private apiUrl = 'http://localhost:8001/api/training';
+  private apiUrl = 'http://localhost:8000/api/training';
 
   constructor(private http: HttpClient) {}
 
