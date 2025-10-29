@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Trainer, TrainerRequest } from '../models/trainer.model';
+import { Trainer, TrainerRequest, TrainerCreateRequest } from '../models/trainer.model';
 import { PaginatedResponse } from '../models/pagination.model';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class TrainerService {
     return this.http.get<Trainer>(`${this.apiUrl}/trainers/${id}/`);
   }
 
-  createTrainer(trainer: TrainerRequest): Observable<Trainer> {
+  createTrainer(trainer: TrainerCreateRequest): Observable<Trainer> {
     return this.http.post<Trainer>(`${this.apiUrl}/trainers/`, trainer);
   }
 
