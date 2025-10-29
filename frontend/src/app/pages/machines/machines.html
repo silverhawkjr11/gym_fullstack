@@ -1,6 +1,10 @@
 <div class="page-container">
   <div class="page-header">
     <h1>Gym Machines</h1>
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      <mat-icon>add</mat-icon>
+      Add Machine
+    </button>
   </div>
 
   <mat-card class="data-card">
@@ -33,6 +37,9 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-data-cell *matCellDef="let machine">
+            <button mat-icon-button class="edit-btn" (click)="openDialog(machine)">
+              <mat-icon>edit</mat-icon>
+            </button>
             <button mat-icon-button class="delete-btn" (click)="deleteMachine(machine.id)">
               <mat-icon>delete</mat-icon>
             </button>

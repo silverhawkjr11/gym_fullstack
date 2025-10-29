@@ -4,13 +4,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MachineService } from '../../services/machine.service';
 import { Machine } from '../../models/machine.model';
+import { MachineDialogComponent } from './machine-dialog';
 
 @Component({
   selector: 'app-machines',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule],
   templateUrl: './machines.html',
   styleUrl: './machines.scss'
 })
@@ -18,7 +20,10 @@ export class MachinesComponent implements OnInit {
   machines: Machine[] = [];
   displayedColumns: string[] = ['code', 'name', 'description', 'actions'];
 
-  constructor(private machineService: MachineService) {}
+  constructor(
+    private machineService: MachineService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loadMachines();
@@ -28,6 +33,31 @@ export class MachinesComponent implements OnInit {
     this.machineService.getMachines().subscribe({
       next: (machines) => this.machines = machines,
       error: (err) => console.error('Error loading machines:', err)
+    });
+  }
+
+  openDialog(machine?: Machine) {
+    const dialogRef = this.dialog.open(MachineDialogComponent, {
+      width: '500px',
+      data: machine || null
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (machine) {
+          // Update existing machine
+          this.machineService.updateMachine(machine.id, result).subscribe({
+            next: () => this.loadMachines(),
+            error: (err) => console.error('Error updating machine:', err)
+          });
+        } else {
+          // Create new machine
+          this.machineService.createMachine(result).subscribe({
+            next: () => this.loadMachines(),
+            error: (err) => console.error('Error creating machine:', err)
+          });
+        }
+      }
     });
   }
 
